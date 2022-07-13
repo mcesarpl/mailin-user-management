@@ -1,0 +1,24 @@
+{
+  "name": "mailin",
+  "version": "1.0.0",
+  "description": "mailin messages to every body",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcesarpl/mailin.git"
+  },
+  "keywords": [
+    "mailing",
+    "messages",
+    "connecting"
+  ],
+  "author": "Landim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcesarpl/mailin/issues"
+  },
+  "homepage": "https://github.com/mcesarpl/mailin#readme"
+}
