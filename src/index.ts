@@ -1,9 +1,7 @@
-import ServerFactory from './factories/ServerFactory';
-import { InitEnvt } from './services';
+import { InitEnv, StartServer } from './services';
 
-InitEnvt.init();
-const server = ServerFactory.create();
+InitEnv.init();
 
-server.init().then(() => {
-  console.log(`App is listening on port ${process.env.PORT}`);
-});
+const starter = new StartServer();
+
+starter.start();
