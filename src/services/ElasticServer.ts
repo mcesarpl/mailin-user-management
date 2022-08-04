@@ -2,7 +2,7 @@ import { LoggerFactory } from '@src/factories';
 import elasticsearch from 'elasticsearch';
 import winston from 'winston';
 
-class ElasticServer {
+export class ElasticServer {
   private readonly client: elasticsearch.Client;
   private readonly log: winston.Logger;
 
@@ -29,5 +29,3 @@ class ElasticServer {
     await this.ping();
   }
 }
-
-export default new ElasticServer();
