@@ -34,8 +34,8 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
+    "config": "^3.3.8",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
     "elasticsearch": "^16.7.3",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
