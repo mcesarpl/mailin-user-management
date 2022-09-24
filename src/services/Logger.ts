@@ -5,9 +5,12 @@ import {
   LogData,
 } from 'winston-elasticsearch';
 import moment from 'moment';
+import config, { IConfig } from 'config';
 
 export class Logger {
   create() {
+    const dbConfig: IConfig = config.get('App.database');
+
     const { combine, colorize, printf } = format;
 
     const { Console } = transports;
@@ -18,7 +21,7 @@ export class Logger {
         .trim()} [${level}] - ${message}`;
     });
 
-    const wintstonLogger = createLogger({
+    const winstonLogger = createLogger({
       level: 'info',
     });
 
@@ -39,14 +42,14 @@ export class Logger {
         const transformed = ElasticsearchTransformer(logData);
         return transformed;
       },
-      clientOpts: { node: process.env.ELASTIC_SERVER },
+      clientOpts: { node: `${dbConfig.get('elastic')}` },
     };
 
     const esTransport = new ElasticsearchTransport(esTransportOpts);
 
-    wintstonLogger.add(consoleTransport);
-    wintstonLogger.add(esTransport);
+    winstonLogger.add(consoleTransport);
+    winstonLogger.add(esTransport);
 
-    return wintstonLogger;
+    return winstonLogger;
   }
 }

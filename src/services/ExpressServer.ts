@@ -3,11 +3,14 @@ import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import routes from '../routes/index';
+import config from 'config';
 
 export class ExpressApp {
   private app = express();
+  private port = config.get('App.port');
+  private authorizationToken = config.get('App.authorizationToken');
 
-  midddlewares() {
+  middleware() {
     const whitelist = ['https://localhost'];
 
     const corsOptions: cors.CorsOptions = {
@@ -25,7 +28,7 @@ export class ExpressApp {
     this.app.use(express.json());
 
     this.app.use((req, res, next) => {
-      if (req.header('authorization') === process.env.AUTHORIZATION_TOKEN) {
+      if (req.header('authorization') === this.authorizationToken) {
         next();
       } else {
         res.status(StatusCodes.UNAUTHORIZED).send({
@@ -42,8 +45,8 @@ export class ExpressApp {
   }
 
   async init() {
-    this.midddlewares();
+    this.middleware();
     this.routes();
-    this.app.listen(process.env.PORT);
+    this.app.listen(this.port);
   }
 }

@@ -1,14 +1,16 @@
 import { LoggerFactory } from '@src/factories';
 import elasticsearch from 'elasticsearch';
 import winston from 'winston';
+import config, { IConfig } from 'config';
 
 export class ElasticServer {
   private readonly client: elasticsearch.Client;
   private readonly log: winston.Logger;
+  private readonly elasticServerHost: IConfig = config.get('App.database');
 
   constructor() {
     this.client = new elasticsearch.Client({
-      host: process.env.ELASTIC_SERVER,
+      host: this.elasticServerHost.get('elastic'),
       log: 'trace',
     });
 
