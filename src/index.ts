@@ -1,6 +1,4 @@
-import { InitEnv, StartServer } from './services';
-
-InitEnv.init();
+import { StartServer } from './services';
 
 const starter = new StartServer();
 
