@@ -6,6 +6,7 @@
       "mongo":"mongodb://admin:root@localhost:27017/mailin?authSource=admin",
       "redis":"redis://localhost:6379",
       "elastic":"http://localhost:9200"
-    }
+    },
+    "jwtSecret":"ItOTtDJibb8FWKejU30U/?g2EGhBN7l7C/loqk!G=jb98iT0SFXgP/Boy=TWCG/HhO2zF=Ho/KqAv4D9qKzGt-07/0lWLPq9SVtbGj9ZhktjmaLEidLoZyGRazIofPuNmi8pFFcwsaBr5c=dlUvxpoXhrueSOQDXfAHsnjG9pAGmo7sLX0!OpGjXtb=Pv4QJCTfoxTsFxvh1qlH6zboj3hb3?lYKW0p5JqkJWX9YIAe4/RLSlEK1JRT4Y6KdN=D/"
   }
 }
