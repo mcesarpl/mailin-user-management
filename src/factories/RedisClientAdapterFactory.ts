@@ -1,14 +1,14 @@
-import { RedisClient } from '@src/services/RedisClient';
+import { RedisClient } from '@src/adapters/RedisClient';
 import { RedisClientType } from 'redis';
 import { redisUser } from '@src/models/redis/user';
 import { IClientDatabase } from '@src/interfaces';
 import { IUser } from '@src/interfaces';
 import Connections from '@src/services/Connections';
 
-class RedisClientFactory implements IClientDatabase {
+export class RedisClientAdapter implements IClientDatabase {
   client!: RedisClientType;
 
-  public async start() {
+  public start() {
     this.client = Connections.getConnections().redis;
 
     const redisClient = new RedisClient<IUser>(this.client, redisUser);
@@ -22,5 +22,3 @@ class RedisClientFactory implements IClientDatabase {
     }
   }
 }
-
-export default RedisClientFactory;

@@ -1,38 +1,39 @@
-import databaseFactory from '@src/factories/DatabaseFactory';
+import databaseFactory from '@src/factories/DatabaseClientFactory';
 import { IDatabase, IUser, levels } from '@src/interfaces';
 import TokenGenerator from '@src/services/TokenGenerator';
 import Connections from '@src/services/Connections';
+import { User } from '@src/classes/user';
 
 describe('Tests for Database Factory', () => {
-  let database: IDatabase<unknown, unknown>;
+  let database: IDatabase<IUser, IUser>;
 
-  const firstUser: IUser = {
+  const firstUser: IUser = new User({
     _id: TokenGenerator.generateToken(),
     name: 'TestName test',
-    user: 'testUserName123',
+    username: 'testUserName123',
     birthDate: new Date('05/27/1997'),
     email: 'testEmail@test.com',
     password: 'test',
     level: levels.admin,
     enable: true,
     lastChange: new Date('08/13/2022'),
-  };
+  });
 
-  const secondUser: IUser = {
+  const secondUser: IUser = new User({
     _id: TokenGenerator.generateToken(),
     name: 'Alan Roy',
-    user: 'alan87ij',
+    username: 'alan87ij',
     birthDate: new Date('03/20/1985'),
     email: 'alan2roy@hotmail.com',
     password: 'test',
     level: levels.standard,
     enable: true,
     lastChange: new Date('09/01/2022'),
-  };
+  });
 
   beforeAll(async () => {
     await Connections.startDatabaseConnections();
-    await databaseFactory.start();
+    databaseFactory.start();
     database = databaseFactory.get();
   });
 
@@ -57,13 +58,13 @@ describe('Tests for Database Factory', () => {
 
     const result = await database.findOne(firstUser._id);
 
-    const expectedResult = {
-      ...firstUser,
-      birthDate: firstUser.birthDate.toISOString(),
-      lastChange: firstUser.lastChange.toISOString(),
-    };
+    let filteredResult = {};
 
-    expect(result).toEqual(expectedResult);
+    if (result) {
+      filteredResult = new User(result);
+    }
+
+    expect(filteredResult).toEqual(firstUser);
 
     await database.deleteOne(firstUser._id);
   });
@@ -75,25 +76,17 @@ describe('Tests for Database Factory', () => {
 
     const result = await database.find({});
 
-    const firstExpectedInstance = {
-      ...firstUser,
-      birthDate: firstUser.birthDate.toISOString(),
-      lastChange: firstUser.lastChange.toISOString(),
-    };
-
-    const secondExpectedInstance = {
-      ...secondUser,
-      birthDate: secondUser.birthDate.toISOString(),
-      lastChange: secondUser.lastChange.toISOString(),
-    };
-
-    expect(result).toEqual(
-      expect.arrayContaining([firstExpectedInstance, secondExpectedInstance]),
-    );
+    const reShapedResult = result.map((user) => {
+      return new User(user);
+    });
 
     await database.deleteOne(firstUser._id);
 
     await database.deleteOne(secondUser._id);
+
+    expect(reShapedResult).toEqual(
+      expect.arrayContaining([firstUser, secondUser]),
+    );
   });
 
   it('should find an instance by email address and return it with success', async () => {
@@ -103,17 +96,15 @@ describe('Tests for Database Factory', () => {
 
     const result = await database.find({ email: firstUser.email });
 
-    const firstExpectedInstance = {
-      ...firstUser,
-      birthDate: firstUser.birthDate.toISOString(),
-      lastChange: firstUser.lastChange.toISOString(),
-    };
-
-    expect(result).toEqual([firstExpectedInstance]);
+    const reShapedResult = result.map((user) => {
+      return new User(user);
+    });
 
     await database.deleteOne(firstUser._id);
 
     await database.deleteOne(secondUser._id);
+
+    expect(reShapedResult).toEqual([firstUser]);
   });
 
   it('should update one instance with success', async () => {

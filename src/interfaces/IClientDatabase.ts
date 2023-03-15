@@ -1,6 +1,6 @@
 import { IDatabase } from './IDatabase';
 
 export interface IClientDatabase {
-  start(): Promise<IDatabase<unknown, unknown>>;
+  start(): IDatabase<unknown, unknown>;
   close(): Promise<void>;
 }

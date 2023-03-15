@@ -1,7 +1,7 @@
 import { IDatabase } from './IDatabase';
 
 export interface IDatabaseFactory {
-  start(): Promise<void>;
+  start(): void;
   close(): Promise<void>;
   get(): IDatabase<unknown, unknown>;
 }
