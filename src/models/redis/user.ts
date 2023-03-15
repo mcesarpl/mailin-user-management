@@ -1,4 +1,4 @@
 export const redisUser = {
   type: 'User',
-  lookupParams: ['email', 'user'],
+  lookupParams: ['email', 'username'],
 };

@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-export const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    user: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     birthDate: { type: Date, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     level: { type: String, required: true },
     enable: { type: Boolean, required: true },
@@ -31,3 +31,7 @@ export const userSchema = new mongoose.Schema(
     },
   },
 );
+
+userSchema.index({ username: 'text', email: 'text' });
+
+export default userSchema;
