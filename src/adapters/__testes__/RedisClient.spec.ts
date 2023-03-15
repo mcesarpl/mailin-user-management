@@ -2,13 +2,13 @@ import { RedisClient } from '../RedisClient';
 
 import { createClient, RedisClientType } from 'redis';
 import { IUser, levels } from '@src/interfaces';
-import TokenGenerator from '../TokenGenerator';
+import TokenGenerator from '../../services/TokenGenerator';
 
 describe('Redis Client methods test', () => {
   const firstUser: IUser = {
     _id: TokenGenerator.generateToken(),
     name: 'Mathew',
-    user: 'tuningMachine',
+    username: 'tuningMachine',
     birthDate: new Date('05/27/1997'),
     email: 'tuningMachine@hotmail.com',
     password: 'test',
@@ -20,7 +20,7 @@ describe('Redis Client methods test', () => {
   const secondUser: IUser = {
     _id: TokenGenerator.generateToken(),
     name: 'Alan Roy',
-    user: 'alan87ij',
+    username: 'alan87ij',
     birthDate: new Date('03/20/1985'),
     email: 'alan2roy@hotmail.com',
     password: 'test',

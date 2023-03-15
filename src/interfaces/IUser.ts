@@ -8,7 +8,7 @@ export interface IUser {
   _id: string;
   name: string;
   birthDate: Date;
-  user: string;
+  username: string;
   email: string;
   password: string;
   level: levels;

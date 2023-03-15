@@ -1,8 +1,8 @@
 import { MongoClient } from '@src/services';
 import { connect as mongooseConnect, Model } from 'mongoose';
-import { userSchema } from '@src/models/mongodb/user';
+import userSchema from '@src/models/mongodb/user';
 import { IUser, levels } from '@src/interfaces';
-import TokenGenerator from '../TokenGenerator';
+import TokenGenerator from '../../services/TokenGenerator';
 import config, { IConfig } from 'config';
 
 describe('Mongo Client Testes', () => {
@@ -14,19 +14,13 @@ describe('Mongo Client Testes', () => {
   const newUser: IUser = {
     _id: TokenGenerator.generateToken(),
     name: 'Test Name',
-    user: 'testUserName',
+    username: 'testUserName',
     birthDate: new Date('05/27/1997'),
     email: 'test@gmail.com',
     password: 'test',
     level: levels.admin,
     enable: true,
     lastChange: new Date('08/13/2022'),
-  };
-
-  const expectedUser = {
-    ...newUser,
-    birthDate: newUser.birthDate.toISOString(),
-    lastChange: newUser.lastChange.toISOString(),
   };
 
   beforeAll(async () => {
@@ -59,7 +53,7 @@ describe('Mongo Client Testes', () => {
     const updateUser: IUser = {
       ...newUser,
       name: 'Another Test',
-      user: 'anotherTestUserName',
+      username: 'anotherTestUserName',
       birthDate: new Date('10/01/1995'),
       email: 'anotherTest@gmail.com',
       password: 'test',
@@ -70,9 +64,9 @@ describe('Mongo Client Testes', () => {
 
     const responseUpdate = await client.updateOne(updateUser);
 
-    expect(responseUpdate).toEqual(updateUser);
-
     await client.deleteOne(updateUser._id);
+
+    expect(responseUpdate).toEqual(updateUser);
   });
 
   it('should find one instance by Id successfully', async () => {
@@ -80,9 +74,12 @@ describe('Mongo Client Testes', () => {
 
     const response = await client.findOne(newUser._id);
 
-    expect(response).toEqual(expectedUser);
-
     await client.deleteOne(newUser._id);
+
+    expect({ ...response, _id: response?._id.toString() }).toEqual({
+      __v: 0,
+      ...newUser,
+    });
   });
 
   it('should find an instance by passed params', async () => {
@@ -90,8 +87,13 @@ describe('Mongo Client Testes', () => {
 
     const response = await client.find({ _id: newUser._id });
 
-    expect(response).toEqual([expectedUser]);
-
     await client.deleteOne(newUser._id);
+
+    expect([{ ...response[0], _id: response[0]?._id.toString() }]).toEqual([
+      {
+        __v: 0,
+        ...newUser,
+      },
+    ]);
   });
 });

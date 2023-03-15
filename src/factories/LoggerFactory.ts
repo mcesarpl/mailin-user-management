@@ -1,8 +1,15 @@
 import { Logger } from '@src/services';
-import winston from 'winston';
+import { Logger as winstonLogger } from 'winston';
 
-export class LoggerFactory {
-  create(): winston.Logger {
-    return new Logger().create();
+class LoggerFactory {
+  public initialedLogger!: winstonLogger;
+  start(): void {
+    this.initialedLogger = new Logger().create();
+  }
+
+  get(): winstonLogger {
+    return this.initialedLogger;
   }
 }
+
+export default new LoggerFactory();

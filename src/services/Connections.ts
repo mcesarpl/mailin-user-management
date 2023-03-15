@@ -1,14 +1,26 @@
 import { connect as mongooseConnect } from 'mongoose';
 import { createClient, RedisClientType } from 'redis';
 import config, { IConfig } from 'config';
+import ElasticSearchFactory from '@src/factories/ElasticSearchFactory';
+import { Client } from 'elasticsearch';
 
 class Connections {
-  mongoClient!: typeof import('mongoose');
-  redisClient!: RedisClientType;
+  private mongoClient!: typeof import('mongoose');
+  private redisClient!: RedisClientType;
+  private elasticSearchClient!: Client;
 
   public async startDatabaseConnections(): Promise<void> {
-    await this.startMongoDBConnection();
-    await this.startRedisConnection();
+    if (!this.mongoClient) {
+      await this.startMongoDBConnection();
+    }
+
+    if (!this.redisClient) {
+      await this.startRedisConnection();
+    }
+
+    if (!this.elasticSearchClient) {
+      await this.startElasticSearchConnection();
+    }
   }
 
   public async closeConnections(): Promise<void> {
@@ -39,6 +51,13 @@ class Connections {
     this.redisClient = createClient({
       url: dbConfig.get('redis'),
     });
+
+    await this.redisClient.connect();
+  }
+
+  private async startElasticSearchConnection(): Promise<void> {
+    await ElasticSearchFactory.start();
+    this.elasticSearchClient = ElasticSearchFactory.get();
   }
 }
 

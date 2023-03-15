@@ -1,27 +1,26 @@
-import { ServerFactory } from '@src/factories';
-import { LoggerFactory } from '@src/factories';
-import { ElasticServer } from '.';
-import config, { IConfig } from 'config';
 import Connections from './Connections';
+import config, { IConfig } from 'config';
+import { ServerFactory } from '@src/factories';
+import LoggerFactory from '@src/factories/LoggerFactory';
+import databaseClientFactory from '@src/factories/DatabaseClientFactory';
 
 export class StartServer {
-  constructor(private readonly log = new LoggerFactory().create()) {}
-
-  public async start(): Promise<void> {
+  public static async start(): Promise<void> {
     try {
       const configPort: IConfig = config.get('App.port');
 
-      const elasticsearch = new ElasticServer();
-      await elasticsearch.init();
-
-      const server = ServerFactory.create();
-      await server.init();
-
       await Connections.startDatabaseConnections();
 
-      this.log.info(`Server is listening at port ${configPort}...`);
+      LoggerFactory.start();
+
+      databaseClientFactory.start();
+
+      const server = ServerFactory.create();
+      await server.start();
+
+      console.log(`Server is listening at port ${configPort}...`);
     } catch (error) {
-      this.log.error((error as Error)?.stack);
+      console.error((error as Error)?.stack);
     }
   }
 }

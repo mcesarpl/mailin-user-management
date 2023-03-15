@@ -2,7 +2,7 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-import routes from '../routes/index';
+import createRouter from '@src/routes/index.routes';
 import config from 'config';
 
 export class ExpressApp {
@@ -41,10 +41,11 @@ export class ExpressApp {
   }
 
   routes() {
-    this.app.use(routes);
+    const initializeRoutes = createRouter.route();
+    this.app.use(initializeRoutes);
   }
 
-  async init() {
+  async start() {
     this.middleware();
     this.routes();
     this.app.listen(this.port);

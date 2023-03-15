@@ -1,3 +1,4 @@
+import { utils } from '@src/helper';
 import { IDatabase } from '@src/interfaces';
 
 import {
@@ -50,21 +51,36 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
     const result = await this.client.set(generatedKey, stringified);
 
     if (result !== 'OK') {
-      return null;
+      throw new Error(
+        `Error when creating instance: ${JSON.stringify(inputInstance)}`,
+      );
     }
 
     return instance;
   }
 
   async updateOne(inputInstance: T & { _id: string }) {
-    const redisInstance = this.forgeRedisInstance(inputInstance);
+    const oldInstance = await this.findOne(inputInstance._id);
+
+    const finalOldInstance = oldInstance ? oldInstance : {};
+
+    const redisInstance = this.forgeRedisInstance({
+      ...finalOldInstance,
+      ...inputInstance,
+    });
+
     const { key, type, lookupParams, instance } = redisInstance;
     const generatedKey = this.generateKey(key, type, lookupParams);
     const stringified = this.stringifyInstance(instance);
+
+    await this.deleteOne(inputInstance._id);
+
     const result = await this.client.set(generatedKey, stringified);
 
     if (result !== 'OK') {
-      return null;
+      throw new Error(
+        `Error when updating instance: ${JSON.stringify(inputInstance)}`,
+      );
     }
 
     return instance;
@@ -75,7 +91,7 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
 
     const keys = await this.client.keys(finalKeyString);
 
-    if (!keys) {
+    if (!keys || keys.length === 0) {
       return null;
     }
 
@@ -108,12 +124,14 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
       return [];
     }
 
-    const values = Promise.all(
-      keys.map(async (key) => {
-        const instance = await this.client.get(key);
-        return this.parseInstance(instance);
-      }),
-    );
+    const values = (
+      await Promise.all(
+        keys.map(async (key) => {
+          const instance = await this.client.get(key);
+          return this.parseInstance(instance);
+        }),
+      )
+    ).filter(utils.notEmpty);
 
     return values;
   }

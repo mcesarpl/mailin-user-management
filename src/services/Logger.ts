@@ -22,7 +22,7 @@ export class Logger {
     });
 
     const winstonLogger = createLogger({
-      level: 'info',
+      level: 'debug',
     });
 
     const errorStackFormat = format((info) => {
