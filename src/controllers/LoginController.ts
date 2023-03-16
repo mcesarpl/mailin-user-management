@@ -37,7 +37,7 @@ export class LoginController {
 
       this.log.info(`User ${foundUser._id} has logged in`);
 
-      return response.status(200).json({ auth: true, token: token });
+      return response.status(200).json({ token: token });
     } catch (error) {
       this.log.error((error as Error).stack);
       return response.status(501).send();
@@ -46,7 +46,7 @@ export class LoginController {
 
   async logout(_: Request, response: Response) {
     try {
-      return response.status(200).json({ auth: true, token: null });
+      return response.status(200).json({ token: null });
     } catch (error) {
       this.log.error((error as Error).stack);
       return response.status(501).send();
