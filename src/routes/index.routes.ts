@@ -3,18 +3,19 @@ import express from 'express';
 import createUserRouter from './user.routes';
 
 import createLoginRouter from './login.routes';
+import createHealthRouter from './health.routes';
 
 class createRouter {
   public static route() {
     const router = express.Router();
 
-    router.get('/', (_, res) => {
-      res.status(200).json({ message: 'Mailin Accounts listening...' });
-    });
-
     const userRoutesInitialized = createUserRouter.route();
 
     const loginRoutesInitialized = createLoginRouter.route();
+
+    const healthRoutesInitialzed = createHealthRouter.route();
+
+    router.use('/health', healthRoutesInitialzed);
 
     router.use('/user', userRoutesInitialized);
 
