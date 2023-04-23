@@ -1,6 +1,6 @@
 {
   "App": {
-    "port":"8080",
+    "port":"80",
     "authorizationToken":"6caefb1e-4d99-11ec-81d3-0242ac130003",
     "database": {
       "mongo":"mongodb://admin:root@localhost:27017/mailin?authSource=admin",
