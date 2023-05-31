@@ -73,7 +73,9 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
     const generatedKey = this.generateKey(key, type, lookupParams);
     const stringified = this.stringifyInstance(instance);
 
-    await this.deleteOne(inputInstance._id);
+    if(oldInstance) {
+      await this.deleteOne(inputInstance._id);
+    }
 
     const result = await this.client.set(generatedKey, stringified);
 
@@ -141,7 +143,7 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
 
     const keys = await this.client.keys(finalKeyString);
 
-    if (!keys) {
+    if (!keys || !Array.isArray(keys) || keys.length === 0) {
       return;
     }
 
