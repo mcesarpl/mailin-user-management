@@ -1,15 +1,15 @@
 import express from 'express';
 
 class createHealthRouter {
-    public static route() {
-        const router = express.Router();
+  public static route() {
+    const router = express.Router();
 
-        router.get('/', (req, res) => {
-            res.status(200).send();
-        });
+    router.get('/', (req, res) => {
+      res.status(200).send();
+    });
 
-        return router;
-    }
+    return router;
+  }
 }
 
 export default createHealthRouter;

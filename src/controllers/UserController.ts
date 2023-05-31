@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { User } from '@src/classes/user';
+import { User } from '@src/classes/User';
 import { IDatabase } from '@src/interfaces';
 import LoggerFactory from '@src/factories/LoggerFactory';
 import databaseClientFactory from '@src/factories/DatabaseClientFactory';
