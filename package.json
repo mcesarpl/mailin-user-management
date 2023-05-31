@@ -14,7 +14,8 @@
     "style:check": "prettier --check src/**/*.ts test/**/*.ts",
     "style:fix": "prettier --write src/**/*.ts test/**/*.ts",
     "eslint": "eslint ./src --ext .ts",
-    "eslint:fix": "eslint ./src --ext .ts --fix"
+    "eslint:fix": "eslint ./src --ext .ts --fix",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
