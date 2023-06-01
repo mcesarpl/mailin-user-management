@@ -48,3 +48,15 @@ services:
       - 27017:27017
     volumes:
       - /data/db/mongo
+
+  postgres:
+    container_name: Postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - /data/db/postgres
