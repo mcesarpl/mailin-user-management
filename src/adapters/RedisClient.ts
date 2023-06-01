@@ -73,7 +73,7 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
     const generatedKey = this.generateKey(key, type, lookupParams);
     const stringified = this.stringifyInstance(instance);
 
-    if(oldInstance) {
+    if (oldInstance) {
       await this.deleteOne(inputInstance._id);
     }
 
